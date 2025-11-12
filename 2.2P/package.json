@@ -1,0 +1,15 @@
+{
+  "name": "2.2p",
+  "version": "1.0.0",
+  "description": "Bootstrapping Express App",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start" : "node server.js"
+  },
+  "author": "Benjamin Pritchard",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
