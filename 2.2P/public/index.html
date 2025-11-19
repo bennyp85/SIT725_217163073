@@ -2,10 +2,177 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <title>Express Static Page</title>
+        <title>Simple Calculator</title>
+        <style>
+            :root{
+                --bg:#0f1724;
+                --card:#0b1220;
+                --accent:#7dd3fc;
+                --text:#e6eef8;
+            }
+            html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;color:var(--text);background:linear-gradient(180deg,#071025 0%, #0b1220 100%);display:flex;align-items:center;justify-content:center;}
+            .wrap{max-width:760px;padding:24px;text-align:center;}
+            h1{margin:0 0 18px;font-size:1.6rem;}
+            .row{display:flex;gap:12px;justify-content:center;align-items:center;margin-bottom:16px;}
+            .num-box{
+                background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+                border-radius:12px;
+                padding:22px 28px;
+                box-shadow: 0 6px 30px rgba(2,6,23,0.7), 0 0 0 2px rgba(125,211,252,0.06);
+                transition:transform .12s ease;
+                position:relative;
+                border:1px solid rgba(125,211,252,0.08);
+                backdrop-filter: blur(6px);
+                min-width:120px;
+            }
+            .num-box:hover{transform:translateY(-3px);}
+            .num-value{font-size:2.4rem;margin:0;color:var(--accent);font-weight:700;}
+            .num-label{font-size:0.85rem;margin-top:6px;color:#9fb6ca;}
+            .glow {
+                position:absolute;
+                inset: -6px;
+                border-radius:14px;
+                pointer-events:none;
+                box-shadow: 0 0 40px 8px rgba(125,211,252,0.06);
+                animation: pulse 3s ease-in-out infinite;
+            }
+            @keyframes pulse{
+                0%{box-shadow: 0 0 12px 2px rgba(125,211,252,0.04);}
+                50%{box-shadow: 0 0 36px 10px rgba(125,211,252,0.08);}
+                100%{box-shadow: 0 0 12px 2px rgba(125,211,252,0.04);}
+            }
+            .controls{display:flex;gap:8px;justify-content:center;margin-bottom:18px;}
+            button.op{
+                background:linear-gradient(180deg,#0ea5a9 0%, #0891b2 100%);
+                color:#042029;border:0;padding:10px 16px;border-radius:8px;cursor:pointer;font-weight:700;font-size:1.1rem;
+                box-shadow:0 6px 18px rgba(2,6,23,0.6);
+                min-width:56px;
+            }
+            button:active{transform:translateY(1px);}
+            .result-box{
+                margin-top:10px;
+                background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+                border-radius:12px;
+                padding:18px;
+                box-shadow: 0 6px 30px rgba(2,6,23,0.7);
+                border:1px solid rgba(125,211,252,0.06);
+                min-height:56px;
+            }
+            .result-value{font-size:1.4rem;color:var(--accent);margin:0;}
+            .error{color:#ffb4b4;}
+        </style>
     </head>
     <body>
-        <h1>Welcome to the Random Quote Generator</h1>
-        <p>Use the endpoints to get an inspirational quote.</p>
+        <div class="wrap">
+            <h1>Simple Calculator</h1>
+
+            <div class="row" aria-live="polite">
+                <div class="num-box" id="num1Box" role="group" aria-label="Number one">
+                    <div class="glow" aria-hidden="true"></div>
+                    <div class="num-value" id="num1">0</div>
+                    <div class="num-label">Number 1</div>
+                </div>
+
+                <div style="display:flex;flex-direction:column;gap:8px;align-items:center;justify-content:center;">
+                    <div class="controls" style="flex-direction:row;">
+                        <button class="op" id="addBtn">+</button>
+                        <button class="op" id="mulBtn">×</button>
+                    </div>
+                    <button class="op" id="newBtn" style="background:linear-gradient(180deg,#f59e0b 0%, #d97706 100%);font-weight:600;">New Numbers</button>
+                </div>
+
+                <div class="num-box" id="num2Box" role="group" aria-label="Number two">
+                    <div class="glow" aria-hidden="true"></div>
+                    <div class="num-value" id="num2">0</div>
+                    <div class="num-label">Number 2</div>
+                </div>
+            </div>
+
+            <div class="result-box" id="resultBox" aria-live="polite">
+                <p class="result-value" id="resultText">Result will appear here</p>
+            </div>
+        </div>
+
+        <!-- Uses GET /add and POST /multiply endpoints -->
+
+        <script>
+            // minimal helpers
+            function randInt(min = 1, max = 99) {
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            }
+
+            function setNumbers(a, b) {
+                document.getElementById('num1').textContent = a;
+                document.getElementById('num2').textContent = b;
+                const resEl = document.getElementById('resultText');
+                resEl.textContent = 'Result will appear here';
+                resEl.classList.remove('error');
+            }
+
+            // API calls
+            async function addNumbers(a, b) {
+                const resEl = document.getElementById('resultText');
+                try {
+                    const res = await fetch(`/add?num1=${encodeURIComponent(a)}&num2=${encodeURIComponent(b)}`);
+                    if (!res.ok) throw new Error('Network response was not ok');
+                    const data = await res.json();
+                    resEl.textContent = `Result: ${data.result}`;
+                    resEl.classList.remove('error');
+                } catch (e) {
+                    resEl.textContent = 'Error computing sum';
+                    resEl.classList.add('error');
+                    console.error(e);
+                }
+            }
+
+            async function multiplyNumbers(a, b) {
+                const resEl = document.getElementById('resultText');
+                try {
+                    const res = await fetch('/multiply', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ num1: a, num2: b })
+                    });
+                    if (!res.ok) {
+                        const err = await res.json().catch(()=>({error: 'server error'}));
+                        throw new Error(err.error || 'Network error');
+                    }
+                    const data = await res.json();
+                    resEl.textContent = `Result: ${data.result}`;
+                    resEl.classList.remove('error');
+                } catch (e) {
+                    resEl.textContent = 'Error computing product';
+                    resEl.classList.add('error');
+                    console.error(e);
+                }
+            }
+
+            // wire up UI
+            function currentNumbers() {
+                return [
+                    Number(document.getElementById('num1').textContent),
+                    Number(document.getElementById('num2').textContent)
+                ];
+            }
+
+            document.getElementById('addBtn').addEventListener('click', () => {
+                const [a, b] = currentNumbers();
+                addNumbers(a, b);
+            });
+
+            document.getElementById('mulBtn').addEventListener('click', () => {
+                const [a, b] = currentNumbers();
+                multiplyNumbers(a, b);
+            });
+
+            document.getElementById('newBtn').addEventListener('click', () => {
+                setNumbers(randInt(), randInt());
+            });
+
+            // initial load
+            window.addEventListener('DOMContentLoaded', () => {
+                setNumbers(randInt(), randInt());
+            });
+        </script>
     </body>
 </html>

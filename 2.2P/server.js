@@ -11,22 +11,23 @@ app.use(express.json());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-let quotes = [
-    { "The best way to get started is to quit talking and begin doing.", author: "Walt Disney" },
-    { "Don't let yesterday take up too much of today.", author: "Will Rogers" },
-    { "It's not whether you get knocked down, it's whether you get up.", author: "Vince Lombardi" }
-];
-
-app.get('/api/quotes', (req, res) => {
-    const randomIndex = Math.floor(Math.random() * quotes.length);
-    res.json(quotes[randomIndex]);  
+// Keep this GET endpoint for addition (required)
+app.get('/add', (req, res) => {
+    const num1 = parseFloat(req.query.num1);
+    const num2 = parseFloat(req.query.num2);
+    if (isNaN(num1) || isNaN(num2)) {
+        return res.status(400).json({ error: 'Invalid numbers provided' });
+    }
+    const sum = num1 + num2;
+    res.json({ result: sum });
 });
 
-app.post('/api/quotes', (req, res) => {
-    const { quote } = req.body;
-    if (!quote || typeof quote != 'string') {
-        return res.status(400).json({ error: 'Quote is required and must be a string.' });
+// Function that multiplies two numbers using the POST method
+app.post('/multiply', (req, res) => {
+    const { num1, num2 } = req.body;
+    if (typeof num1 !== 'number' || typeof num2 !== 'number') {
+        return res.status(400).json({ error: 'Invalid numbers provided' });
     }
-    quotes.push({ quote, author: "Unknown" });
-    res.status(201).json({ message: 'Quote added successfully.' });
+    const product = num1 * num2;
+    res.json({ result: product });
 });
