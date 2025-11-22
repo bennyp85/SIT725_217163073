@@ -1,0 +1,14 @@
+{
+  "name": "3.2p",
+  "version": "1.0.0",
+  "description": "Bootstrapping Express App",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "Benjamin Pritchard",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
