@@ -1,0 +1,23 @@
+.navbar-size {
+    width: 95%;
+    margin: 0 auto;
+}
+
+.user-image-size {
+    height: 64px;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+}
+nav, .nav-wrapper, .brand-logo, .right {
+    margin: 0;
+    padding: 0;
+}
+.materialboxed-image {
+    width: 30%;
+    height: auto; /* Maintain aspect ratio */
+    display: block;
+    margin: 0 auto; /* Center the image */
+}
