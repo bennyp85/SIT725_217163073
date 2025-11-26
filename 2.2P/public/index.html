@@ -113,7 +113,7 @@
             async function addNumbers(a, b) {
                 const resEl = document.getElementById('resultText');
                 try {
-                    const res = await fetch(`/add?num1=${encodeURIComponent(a)}&num2=${encodeURIComponent(b)}`);
+                    const res = await fetch(`/api/add?num1=${encodeURIComponent(a)}&num2=${encodeURIComponent(b)}`);
                     if (!res.ok) throw new Error('Network response was not ok');
                     const data = await res.json();
                     resEl.textContent = `Result: ${data.result}`;
@@ -128,7 +128,7 @@
             async function multiplyNumbers(a, b) {
                 const resEl = document.getElementById('resultText');
                 try {
-                    const res = await fetch('/multiply', {
+                    const res = await fetch('/api/multiply', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ num1: a, num2: b })

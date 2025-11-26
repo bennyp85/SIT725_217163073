@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Keep this GET endpoint for addition (required)
-app.get('/add', (req, res) => {
+app.get('/api/add', (req, res) => {
     const num1 = parseFloat(req.query.num1);
     const num2 = parseFloat(req.query.num2);
     if (isNaN(num1) || isNaN(num2)) {
@@ -23,7 +23,7 @@ app.get('/add', (req, res) => {
 });
 
 // Function that multiplies two numbers using the POST method
-app.post('/multiply', (req, res) => {
+app.post('/api/multiply', (req, res) => {
     const { num1, num2 } = req.body;
     if (typeof num1 !== 'number' || typeof num2 !== 'number') {
         return res.status(400).json({ error: 'Invalid numbers provided' });
