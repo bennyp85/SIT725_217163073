@@ -22,7 +22,36 @@
   <link rel="stylesheet" href="css/styles.css">
 </head>
 
-<body>
+  <body>
+  <nav>
+      <div class="nav-wrapper navbar-size">
+        <a href="#" class="brand-logo"><img class="user-image-size" src="images/robot.png" /></a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+          <li><a target="_blank" href="https://pennylane.ai/qml/glossary/quantum_feature_map">About Quantum Circuits</a></li>
+        </ul>
+      </div>
+  </nav>
+  <main class="main-body">
+    <div class="container">
+      <div class="row">
+        <div class="col s12 center-align">
+          <h1 id="heading">Welcome to Quantum Circuits</h1>
+            <div class="center-align" style="max-width:420px;margin:0 auto;">
+            <p class="flow-text" style="font-size:1.2rem;">This is a demo application that showcases different quantum circuit feature maps.</p>
+            <img id="bloch-image" class="responsive-img materialboxed" src="images/bloch.png" alt="Bloch sphere" style="max-width:220px;margin:1rem auto;display:block;" />
+            <p class="flow-text" style="font-size:1.2rem;">Click the Bloch sphere to load the feature map cards.</p>
+            </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <section class="container">
+    <div class="row center-align">
+      <p id="cards-helper">Below are the feature map cards injected by <code>scripts.js</code>.</p>
+    </div>
+    <div class="row" id="card-section"></div>
+  </section>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <!-- Compiled and minified JavaScript -->
