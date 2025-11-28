@@ -5,7 +5,7 @@ app.use(express.static(__dirname + '/public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-var cardList = [
+const cardList = [
     {
         title: "Local Z Feature Map",
         image: "images/feature_local_z.png",
@@ -23,7 +23,7 @@ var cardList = [
     }
 ];
 
-app.get('/api/cards', function(req, res) {
+app.get('/api/cards', (req, res) => {
     res.json(cardList);
 });
 
