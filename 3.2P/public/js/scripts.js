@@ -1,21 +1,3 @@
-const cardList = [
-    {
-        title: "Local Z Feature Map",
-        image: "images/feature_local_z.png",
-        description: "Applies local Z rotations to each qubit based on the input value."
-    },
-    {
-        title: "Feature Reuploading",
-        image: "images/feature_reuploading.png",
-        description: "Re-encodes the same inputs multiple times to increase expressiveness."
-    },
-    {
-        title: "Feature ZZ Interaction",
-        image: "images/feature_zz_interaction.png",
-        description: "Encodes qubit-qubit correlations by adding ZZ rotations between neighbors."
-    }
-];
-
 const addCards = (items) => {
     const cardsArea = $("#card-section");
     cardsArea.empty();
@@ -36,7 +18,10 @@ const addCards = (items) => {
 
 const showCardsOnImageClick = () => {
     $("#cards-section").show();
-    addCards(cardList);
+    fetch('/api/cards')
+        .then(response => response.json())
+        .then(cardList => addCards(cardList))
+        .catch(error => console.error('Error fetching cards:', error));
 };
 
 $(document).ready(function(){
