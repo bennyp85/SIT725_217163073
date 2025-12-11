@@ -6,7 +6,7 @@ const port = 3000;
 const booksRoute = require('./routes/books');
 
 // mount the books route
-app.use('/books', booksRoute);
+app.use('/api/books', booksRoute);
 
 // root route
 app.get('/', (req, res) => {

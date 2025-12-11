@@ -42,7 +42,7 @@ const bookItems = [
 ];
 
 const getAllBooks = () => {
-    return booksItems;
+    return bookItems;
 };
 
 module.exports = {
