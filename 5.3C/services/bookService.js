@@ -1,8 +1,7 @@
-const foodItems = require('../models/bookModel');
-const { get } = require('../routes/books');
+const bookItems = require('../models/bookModel');
 
 async function getAllBooks() {
-    return foodItems.find({}).lean({getters: true});
+    return bookItems.find({}).lean({getters: true});
 }
 
 module.exports = {
