@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 
 // Define the Book schema
 const bookSchema = new mongoose.Schema({
+    id: {
+        type: String,
+        index: true
+    },
     title: {
         type: String,
         required: true, 
@@ -12,6 +16,12 @@ const bookSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    genre: {
+        type: String
+    },
+    summary: {
+        type: String
+    },
     publishedYear: {
         type: Number,
         required: true
@@ -19,7 +29,7 @@ const bookSchema = new mongoose.Schema({
     price : {
         type: mongoose.Decimal128,
         required: true,
-        get : v => v?.tostring()
+        get : v => v?.toString()
     }, 
     currency : {
         type: String,

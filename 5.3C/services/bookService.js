@@ -1,7 +1,7 @@
 const bookItems = require('../models/bookModel');
 
 async function getAllBooks() {
-    return bookItems.find({}).lean({getters: true});
+    return bookItems.find({});
 }
 
 module.exports = {

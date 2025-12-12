@@ -95,6 +95,16 @@
             font-weight: 500;
         }
 
+        .book-genre {
+            display: inline-block;
+            font-size: 0.85rem;
+            color: #2c3e50;
+            background: rgba(102, 126, 234, 0.12);
+            padding: 3px 8px;
+            border-radius: 12px;
+            margin-bottom: 6px;
+        }
+
         .book-details {
             display: flex;
             flex-wrap: wrap;
@@ -132,6 +142,13 @@
             margin-top: 10px;
         }
 
+        .book-summary {
+            margin-top: 10px;
+            font-size: 0.95rem;
+            color: #34495e;
+            line-height: 1.4;
+        }
+
         .no-books {
             text-align: center;
             padding: 40px;
@@ -157,7 +174,7 @@
 <body>
     <div class="container">
         <header>
-            <h1>Books Catalogue developed by Benjamin Pennefather</h1>
+            <h1>Books Catalogue developed by Benjamin</h1>
             <div class="subtitle">Browse our collection of books</div>
         </header>
 
@@ -199,18 +216,20 @@
                     <div class="book-card">
                         <div class="book-title">${escapeHtml(book.title)}</div>
                         <div class="book-author">by ${escapeHtml(book.author)}</div>
+                        ${book.genre ? `<div class="book-genre">${escapeHtml(book.genre)}</div>` : ''}
                         <div class="book-details">
                             <div class="book-detail-item">
                                 <span class="detail-label">Published Year</span>
                                 <span class="detail-value">${book.publishedYear}</span>
                             </div>
-                            ${book._id ? `
+                            ${(book.id || book._id) ? `
                             <div class="book-detail-item">
-                                <span class="detail-label">Book ID</span>
-                                <span class="detail-value">${book._id}</span>
+                                <span class="detail-label">Book Code</span>
+                                <span class="detail-value">${book.id || book._id}</span>
                             </div>
                             ` : ''}
                         </div>
+                        ${book.summary ? `<div class="book-summary">${escapeHtml(book.summary)}</div>` : ''}
                         <div class="price">${book.price} ${book.currency || 'AUD'}</div>
                     </div>
                 `).join('');

@@ -1,18 +1,16 @@
-const path = require('path');
+// Import the service
 const bookService = require('../services/bookService');
 
-// Controller to handle retrieving all books
-exports.getAllBooks = async (req, res) => {
-    const items = bookService.getAllBooks();
-
-    // Serve a browsable page unless the client explicitly asks for JSON
-    if (req.query.format === 'json' || req.headers.accept?.includes('application/json')) {
-        return res.json({
-            status: 'success',
-            data: items,
-            message: 'Books retrieved successfully'
-        });
-    }
-
-    return res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
+//Controller uses the service to get data
+exports.getAllBooks = async (_req, res, next) => {
+  try {
+    const items = await bookService.getAllBooks();
+    res.status(200).json({
+      statusCode: 200,
+      data: items,
+      message: 'Books retrieved using service'
+    });
+  } catch (err) {
+    next(err);
+  }
 };
