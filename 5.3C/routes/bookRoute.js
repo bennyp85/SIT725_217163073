@@ -7,6 +7,6 @@ const Controllers = require('../controllers');
 // GET /books - Retrieve a list of all books
 router.get('/', Controllers.bookController.getAllBooks);
 
-module.exports = router;
-
 router.get('/_debug', (_req, res) => res.json({ ok: true }));
+
+module.exports = router;
