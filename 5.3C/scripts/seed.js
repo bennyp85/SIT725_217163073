@@ -1,11 +1,8 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost:27017/bookDB', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect('mongodb://localhost:27017/bookDB');
 
-const foodItems = require('../models/bookModel');
+const bookItems = require('../models/bookModel');
 
 const sampleBooks = [
   { title: 'Book One', author: 'Author A', publishedYear: 2001, price: 19.99, currency: 'AUD' },

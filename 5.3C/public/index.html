@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Books Catalogue</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .loading,
+        .error {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2rem;
+            color: #667eea;
+        }
+
+        .error {
+            color: #e74c3c;
+        }
+
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .book-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 10px;
+            padding: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #e1e8ed;
+        }
+
+        .book-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .book-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .book-author {
+            font-size: 1rem;
+            color: #667eea;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .book-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .book-detail-item {
+            display: flex;
+            flex-direction: column;
+            font-size: 0.9rem;
+        }
+
+        .detail-label {
+            color: #7f8c8d;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .detail-value {
+            color: #34495e;
+            font-weight: 600;
+        }
+
+        .price {
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .no-books {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .books-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Books Catalogue developed by Benjamin Pennefather</h1>
+            <div class="subtitle">Browse our collection of books</div>
+        </header>
+
+        <div class="content">
+            <div id="status" class="loading">Loading books...</div>
+            <div id="books-container" class="books-grid" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Fetch and display books from the API
+        async function loadBooks() {
+            const statusEl = document.getElementById('status');
+            const booksContainer = document.getElementById('books-container');
+
+            try {
+                // Fetch books from the API endpoint
+                const response = await fetch('/api/book?format=json');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                const books = result.data || [];
+
+                // Hide loading message
+                statusEl.style.display = 'none';
+
+                // Check if there are any books
+                if (books.length === 0) {
+                    booksContainer.innerHTML = '<div class="no-books">No books available in the catalogue.</div>';
+                    booksContainer.style.display = 'block';
+                    return;
+                }
+
+                // Display books
+                booksContainer.innerHTML = books.map(book => `
+                    <div class="book-card">
+                        <div class="book-title">${escapeHtml(book.title)}</div>
+                        <div class="book-author">by ${escapeHtml(book.author)}</div>
+                        <div class="book-details">
+                            <div class="book-detail-item">
+                                <span class="detail-label">Published Year</span>
+                                <span class="detail-value">${book.publishedYear}</span>
+                            </div>
+                            ${book._id ? `
+                            <div class="book-detail-item">
+                                <span class="detail-label">Book ID</span>
+                                <span class="detail-value">${book._id}</span>
+                            </div>
+                            ` : ''}
+                        </div>
+                        <div class="price">${book.price} ${book.currency || 'AUD'}</div>
+                    </div>
+                `).join('');
+                
+                booksContainer.style.display = 'grid';
+
+            } catch (error) {
+                console.error('Error loading books:', error);
+                statusEl.className = 'error';
+                statusEl.textContent = `Failed to load books: ${error.message}`;
+            }
+        }
+
+        // Escape HTML to prevent XSS attacks
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Load books when page loads
+        document.addEventListener('DOMContentLoaded', loadBooks);
+    </script>
+</body>
+</html>
