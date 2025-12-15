@@ -125,7 +125,7 @@ function displaySingleBook(book) {
             <p><strong>Genre:</strong> ${book.genre}</p>
             <p><strong>Summary:</strong> ${book.summary}</p>
             <p><strong>Published Year:</strong> ${book.publishedYear}</p>
-            <p><strong>Price:</strong> ${book.currency} $${book.price}</p>
+            <p><strong>Price:</strong> $${book.price} ${book.currency}</p>
         </div>
     `;
     findBookResult.innerHTML = html;
@@ -163,7 +163,7 @@ function displayAllBooks(books) {
                         <td>${book.author}</td>
                         <td>${book.genre}</td>
                         <td>${book.publishedYear}</td>
-                        <td>${book.currency} $${book.price}</td>
+                        <td>$${book.price} ${book.currency}</td>
                     </tr>
                 `).join('')}
             </tbody>
