@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Management System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Book Management System</h1>
+            <p>Manage your book collection with ease</p>
+        </header>
+
+        <!-- Messages Area -->
+        <div id="messageArea" class="message-area"></div>
+
+        <!-- Find Book Section -->
+        <section class="card">
+            <h2>Find Book by ID</h2>
+            <form id="findBookForm">
+                <div class="form-group">
+                    <label for="findBookId">Book ID:</label>
+                    <input type="text" id="findBookId" placeholder="e.g., b001" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Find Book</button>
+            </form>
+            <div id="findBookResult" class="result-area"></div>
+        </section>
+
+        <!-- Add Book Section -->
+        <section class="card">
+            <h2>Add New Book</h2>
+            <form id="addBookForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="addBookId">Book ID: <span class="required">*</span></label>
+                        <input type="text" id="addBookId" placeholder="e.g., b001" required>
+                        <small>Must start with 'b' followed by letters, numbers, dashes, or underscores</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="addTitle">Title: <span class="required">*</span></label>
+                        <input type="text" id="addTitle" placeholder="Book title" required>
+                        <small>2-100 characters</small>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="addAuthor">Author: <span class="required">*</span></label>
+                        <input type="text" id="addAuthor" placeholder="Author name" required>
+                        <small>2-60 characters</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="addGenre">Genre: <span class="required">*</span></label>
+                        <select id="addGenre" required>
+                            <option value="">Select genre...</option>
+                            <option value="Fiction">Fiction</option>
+                            <option value="Non-Fiction">Non-Fiction</option>
+                            <option value="Science">Science</option>
+                            <option value="Biography">Biography</option>
+                            <option value="Fantasy">Fantasy</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="addSummary">Summary: <span class="required">*</span></label>
+                    <textarea id="addSummary" rows="4" placeholder="Book summary..." required></textarea>
+                    <small>Max 500 characters</small>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="addYear">Published Year: <span class="required">*</span></label>
+                        <input type="number" id="addYear" placeholder="e.g., 2023" min="1450" max="2025" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="addPrice">Price (AUD): <span class="required">*</span></label>
+                        <input type="number" id="addPrice" placeholder="e.g., 29.99" min="0.01" max="1000" step="0.01" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-success">Add Book</button>
+            </form>
+        </section>
+
+        <!-- Update Book Section -->
+        <section class="card">
+            <h2>Update Existing Book</h2>
+            <form id="updateBookForm">
+                <div class="form-group">
+                    <label for="updateBookId">Book ID to Update: <span class="required">*</span></label>
+                    <input type="text" id="updateBookId" placeholder="e.g., b001" required>
+                    <small>Enter the ID of the book you want to update</small>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="updateTitle">New Title:</label>
+                        <input type="text" id="updateTitle" placeholder="Book title">
+                        <small>2-100 characters</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="updateAuthor">New Author:</label>
+                        <input type="text" id="updateAuthor" placeholder="Author name">
+                        <small>2-60 characters</small>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="updateGenre">New Genre:</label>
+                        <select id="updateGenre">
+                            <option value="">Keep current genre...</option>
+                            <option value="Fiction">Fiction</option>
+                            <option value="Non-Fiction">Non-Fiction</option>
+                            <option value="Science">Science</option>
+                            <option value="Biography">Biography</option>
+                            <option value="Fantasy">Fantasy</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="updateYear">New Published Year:</label>
+                        <input type="number" id="updateYear" placeholder="e.g., 2023" min="1450" max="2025">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="updateSummary">New Summary:</label>
+                    <textarea id="updateSummary" rows="4" placeholder="Book summary..."></textarea>
+                    <small>Max 500 characters</small>
+                </div>
+                <div class="form-group">
+                    <label for="updatePrice">New Price (AUD):</label>
+                    <input type="number" id="updatePrice" placeholder="e.g., 29.99" min="0.01" max="1000" step="0.01">
+                </div>
+                <button type="submit" class="btn btn-warning">Update Book</button>
+            </form>
+        </section>
+
+        <!-- All Books Section -->
+        <section class="card">
+            <h2>All Books</h2>
+            <button id="refreshBooksBtn" class="btn btn-primary">Refresh List</button>
+            <div id="booksTable" class="table-container">
+                <p>Loading books...</p>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
