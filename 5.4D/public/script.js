@@ -40,7 +40,7 @@ function convertAUDtoINR(audValue) {
 // Currency Conversion: Parse price string to extract numeric value
 function parsePriceString(priceString) {
     // Extract numeric value from strings like "$24.99 AUD" or "$24.99"
-    const match = priceString.match(/[\d.]+/);
+    const match = priceString.match(/\d+(?:\.\d+)?/);
     return match ? parseFloat(match[0]) : 0;
 }
 
@@ -310,8 +310,12 @@ refreshBooksBtn.addEventListener('click', () => {
     getAllBooks();
 });
 
-// Event: Convert to INR Button
+// Initial Load and Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
+    // Load initial books
+    getAllBooks();
+    
+    // Set up Convert to INR button listener
     const convertToINRBtn = document.getElementById('convertToINRBtn');
     if (convertToINRBtn) {
         convertToINRBtn.addEventListener('click', () => {
@@ -319,9 +323,4 @@ document.addEventListener('DOMContentLoaded', () => {
             convertAllPricesToINR();
         });
     }
-});
-
-// Initial Load
-document.addEventListener('DOMContentLoaded', () => {
-    getAllBooks();
 });
