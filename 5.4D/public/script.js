@@ -1,6 +1,10 @@
 // API Base URL
 const API_BASE = '/api/book';
 
+// Currency Conversion
+const AUD_TO_INR_RATE = 55;
+let isConvertedToINR = false;
+
 // DOM Elements
 const messageArea = document.getElementById('messageArea');
 const findBookForm = document.getElementById('findBookForm');
@@ -26,6 +30,54 @@ function showMessage(message, type = 'info') {
 // Utility: Clear Messages
 function clearMessages() {
     messageArea.innerHTML = '';
+}
+
+// Currency Conversion: Helper function to convert AUD to INR
+function convertAUDtoINR(audValue) {
+    return audValue * AUD_TO_INR_RATE;
+}
+
+// Currency Conversion: Parse price string to extract numeric value
+function parsePriceString(priceString) {
+    // Extract numeric value from strings like "$24.99 AUD" or "$24.99"
+    const match = priceString.match(/\d+(?:\.\d+)?/);
+    return match ? parseFloat(match[0]) : 0;
+}
+
+// Currency Conversion: Convert all visible prices to INR
+function convertAllPricesToINR() {
+    if (isConvertedToINR) {
+        showMessage('Prices are already converted to INR', 'info');
+        return;
+    }
+
+    // Find all price cells in the table
+    const priceCells = booksTable.querySelectorAll('tbody td:last-child');
+    
+    if (priceCells.length === 0) {
+        showMessage('No books to convert', 'info');
+        return;
+    }
+
+    priceCells.forEach(cell => {
+        const currentText = cell.textContent;
+        const audValue = parsePriceString(currentText);
+        const inrValue = convertAUDtoINR(audValue);
+        cell.textContent = `₹${inrValue.toFixed(2)} INR`;
+    });
+
+    // Update the single book display if visible
+    const singleBookPrice = findBookResult.querySelector('.book-details p:last-child strong');
+    if (singleBookPrice && singleBookPrice.textContent === 'Price:') {
+        const priceText = singleBookPrice.parentElement.textContent;
+        const audValue = parsePriceString(priceText);
+        const inrValue = convertAUDtoINR(audValue);
+        singleBookPrice.parentElement.innerHTML = `<strong>Price:</strong> ₹${inrValue.toFixed(2)} INR`;
+    }
+
+    isConvertedToINR = true;
+    document.getElementById('convertToINRBtn').disabled = true;
+    showMessage('All prices converted to INR successfully!', 'success');
 }
 
 // API: Get All Books
@@ -133,6 +185,13 @@ function displaySingleBook(book) {
 
 // Display: All Books in Table
 function displayAllBooks(books) {
+    // Reset conversion state when displaying fresh data
+    isConvertedToINR = false;
+    const convertBtn = document.getElementById('convertToINRBtn');
+    if (convertBtn) {
+        convertBtn.disabled = false;
+    }
+    
     if (!books || books.length === 0) {
         booksTable.innerHTML = `
             <div class="empty-state">
@@ -251,7 +310,17 @@ refreshBooksBtn.addEventListener('click', () => {
     getAllBooks();
 });
 
-// Initial Load
+// Initial Load and Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
+    // Load initial books
     getAllBooks();
+    
+    // Set up Convert to INR button listener
+    const convertToINRBtn = document.getElementById('convertToINRBtn');
+    if (convertToINRBtn) {
+        convertToINRBtn.addEventListener('click', () => {
+            clearMessages();
+            convertAllPricesToINR();
+        });
+    }
 });
