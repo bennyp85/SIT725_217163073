@@ -4,13 +4,13 @@ const request = require("request");
 /*
 Test 1: Valid book ID
 •	Arrange: stub bookService.getBookById to return a fake book
-•	Act: call GET /api/books/b9
+•	Act: call GET /api/book/b9
 •	Assert: response status is 200
 
 
 Test 2: Invalid book ID
 •	Arrange: stub bookService.getBookById to return null
-•	Act: call GET /api/books/does-not-exist
+•	Act: call GET /api/book/does-not-exist
 •	Assert: response status is 404
 
 Test 3: Valid conversion
@@ -24,23 +24,27 @@ Test 4: Edge case
 
 */
 
+
 describe("Book API", function() {
     const baseUrl = "http://localhost:3004/api/book";
 
     it("Test 1: Valid book ID", function(done) {
-        request.get(`${baseUrl}/b9`, function(error, response, body) {
-            expect(response.statusCode).to.equal(200);
-            done();
-        });
+    request.get(`${baseUrl}/b1`, function(error, response, body) {
+        if (error) return done(error);
+        expect(response.statusCode).to.equal(200);
+        done();
+    });
     });
 
     it("Test 2: Invalid book ID", function(done) {
-        request.get(`${baseUrl}/does-not-exist`, function(error, response, body) {
-            expect(response.statusCode).to.equal(404);
-            done();
-        });
+    request.get(`${baseUrl}/does-not-exist`, function(error, response, body) {
+        if (error) return done(error);
+        expect(response.statusCode).to.equal(404);
+        done();
+    });
     });
 });
+
 
 describe("Book Service - Currency Conversion", function() {
     const bookService = require('../services/bookService');
