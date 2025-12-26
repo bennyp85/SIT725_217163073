@@ -36,9 +36,16 @@ async function updateBook(id, data) {
   return updated; // null if not found
 }
 
+// Pure conversion function: AUD to INR (no DB access)
+function convertAUDtoINR(audValue) {
+  const AUD_TO_INR_RATE = 55;
+  return audValue * AUD_TO_INR_RATE;
+}
+
 module.exports = {
   getAllBooks,
   getBookById,
   createBook,
-  updateBook
+  updateBook,
+  convertAUDtoINR
 };
