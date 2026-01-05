@@ -41,6 +41,37 @@
             opacity: 0.9;
         }
 
+        .actions {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            appearance: none;
+            border: 0;
+            cursor: pointer;
+            background: #667eea;
+            color: #fff;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
         .content {
             background: white;
             border-radius: 15px;
@@ -173,27 +204,42 @@
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>Books Catalogue developed by Benjamin</h1>
-            <div class="subtitle">Browse our collection of books</div>
-        </header>
+            <header>
+                <h1>Books Catalogue developed by Benjamin</h1>
+                <div class="subtitle">Browse our collection of books</div>
+            </header>
 
-        <div class="content">
-            <div id="status" class="loading">Loading books...</div>
-            <div id="books-container" class="books-grid" style="display: none;"></div>
+            <div class="content">
+                <div class="actions">
+                    <button id="get-books-btn" class="btn" type="button">Get All Books</button>
+                </div>
+
+                <div id="status" class="loading" style="display:none;"></div>
+
+                <div id="books-container" class="books-grid" style="display: none;"></div>
+            </div>
         </div>
-    </div>
 
+    
     <script>
         // Fetch and display books from the API
         async function loadBooks() {
             const statusEl = document.getElementById('status');
             const booksContainer = document.getElementById('books-container');
+            const btn = document.getElementById('get-books-btn');
 
             try {
+                btn.disabled = true;
+                statusEl.className = 'loading';
+                statusEl.textContent = 'Loading books...';
+                statusEl.style.display = 'block';
+
+                // Keep hidden until we have content to show
+                booksContainer.style.display = 'none';
+
                 // Fetch books from the API endpoint
                 const response = await fetch('/api/book?format=json');
-                
+
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
@@ -233,25 +279,28 @@
                         <div class="price">${book.price} ${book.currency || 'AUD'}</div>
                     </div>
                 `).join('');
-                
+
                 booksContainer.style.display = 'grid';
 
             } catch (error) {
                 console.error('Error loading books:', error);
                 statusEl.className = 'error';
                 statusEl.textContent = `Failed to load books: ${error.message}`;
+                statusEl.style.display = 'block';
+            } finally {
+                btn.disabled = false;
             }
         }
 
         // Escape HTML to prevent XSS attacks
         function escapeHtml(text) {
             const div = document.createElement('div');
-            div.textContent = text;
+            div.textContent = text ?? '';
             return div.innerHTML;
         }
 
-        // Load books when page loads
-        document.addEventListener('DOMContentLoaded', loadBooks);
+        // Show button by default; load books only when clicked
+        document.getElementById('get-books-btn').addEventListener('click', loadBooks);
     </script>
 </body>
 </html>
