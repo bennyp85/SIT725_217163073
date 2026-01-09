@@ -4,6 +4,7 @@ const hostPanel = document.getElementById('hostPanel');
 const roleText = document.getElementById('roleText');
 const pSlider = document.getElementById('pSlider');
 const pValue = document.getElementById('pValue');
+const recentDiv = document.getElementById('recent');
 
 // Store last 20 measurements
 const recentMeasurements = [];
@@ -45,7 +46,6 @@ socket.on('measurement', (state) => {
   }
   
   // Update recent measurements display
-  const recentDiv = document.getElementById('recent');
   recentDiv.innerText = recentMeasurements.join(' ');
   
   renderCommon(state);
