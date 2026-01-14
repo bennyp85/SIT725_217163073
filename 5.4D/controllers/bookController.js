@@ -65,7 +65,7 @@ exports.createBook = async (req, res, next) => {
     if (err.code === 11000) { // Duplicate key
       return res.status(409).json({
         statusCode: 409,
-        message: 'Duplicate ID or title. Each book must have a unique ID and title.'
+        message: 'Duplicate ID. Each book must have a unique ID.'
       });
     }
     next(err);

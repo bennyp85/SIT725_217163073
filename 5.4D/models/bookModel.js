@@ -7,15 +7,15 @@ const bookSchema = new mongoose.Schema({
         required: [true, 'Book ID is required.'],
         match: [/^b[A-Za-z0-9_-]+$/, 'Book ID must start with "b" and contain only letters, numbers, dashes, or underscores.'],
         immutable: true,
+        unique: true,
         index: true,
-        trim: true
+        trim: true,
     },
     title: {
         type: String,
         required: [true, 'Title is required.'],
         minlength: [2, 'Title must be at least 2 characters long.'],
         maxlength: [100, 'Title cannot exceed 100 characters.'],
-        unique: true,
         index: true,
         trim: true
     },
@@ -30,8 +30,8 @@ const bookSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Genre is required.'],
         enum: {
-            values: ['Fiction', 'Non-Fiction', 'Science', 'Biography', 'Fantasy', 'Other'],
-            message: 'Genre must be one of: Fiction, Non-Fiction, Science, Biography, Fantasy, Other.'
+            values: ['Historical Fiction', 'Non-Fiction', 'Science Fiction', 'Classic', 'Fantasy', 'Other'],
+            message: 'Genre must be one of: Historical Fiction, Non-Fiction, Science Fiction, Classic, Fantasy, Other.'
         },
         trim: true
     },
