@@ -59,17 +59,12 @@ const sampleBooks = [
 
 (async () => {
   try {
-    await bookItems.collection.createIndex({ title: 1 }, { unique: true });
-
     await bookItems.deleteMany({});
-    console.log('Cleared existing book items.');
-
+    await bookItems.syncIndexes();
     await bookItems.insertMany(sampleBooks);
-    console.log('Inserted sample book items.');
-
-    mongoose.connection.close();
-    console.log('Database connection closed.');
+    await mongoose.connection.close();
   } catch (error) {
     console.error('Error seeding the database:', error);
+    await mongoose.connection.close();
   }
 })();
