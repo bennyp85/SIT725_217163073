@@ -60,8 +60,11 @@ const sampleBooks = [
 (async () => {
   try {
     await bookItems.deleteMany({});
+    console.log('Existing book items cleared.');
     await bookItems.syncIndexes();
+    console.log('Indexes synchronized.');
     await bookItems.insertMany(sampleBooks);
+    console.log('Sample books inserted.');
     await mongoose.connection.close();
   } catch (error) {
     console.error('Error seeding the database:', error);
