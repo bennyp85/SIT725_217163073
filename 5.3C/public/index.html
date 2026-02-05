@@ -292,11 +292,14 @@
 
                 // Display books as a simple list with title and price
                 booksContainer.innerHTML = allBooks.map((book, index) => `
-                    <div class="book-list-item" onclick="showBookDetails(${index})">
+                    <div class="book-list-item" data-book-index="${index}">
                         <span class="book-list-title">${escapeHtml(book.title)}</span>
                         <span class="book-list-price">${book.price} ${book.currency || 'AUD'}</span>
                     </div>
                 `).join('');
+
+                // Add event delegation for list item clicks
+                booksContainer.addEventListener('click', handleBookClick);
 
                 booksContainer.style.display = 'block';
 
@@ -307,6 +310,15 @@
                 statusEl.style.display = 'block';
             } finally {
                 btn.disabled = false;
+            }
+        }
+
+        // Handle click on book list items
+        function handleBookClick(event) {
+            const listItem = event.target.closest('.book-list-item');
+            if (listItem && listItem.dataset.bookIndex !== undefined) {
+                const index = parseInt(listItem.dataset.bookIndex, 10);
+                showBookDetails(index);
             }
         }
 
