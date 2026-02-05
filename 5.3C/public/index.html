@@ -187,6 +187,36 @@
             font-size: 1.1rem;
         }
 
+        .book-list-item {
+            padding: 15px;
+            border-bottom: 1px solid #e1e8ed;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .book-list-item:hover {
+            background-color: #f5f7fa;
+        }
+
+        .book-list-item:last-child {
+            border-bottom: none;
+        }
+
+        .book-list-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .book-list-price {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
         @media (max-width: 768px) {
             h1 {
                 font-size: 2rem;
@@ -222,7 +252,10 @@
 
     
     <script>
-        // Fetch and display books from the API
+        // Store books data globally for detail view
+        let allBooks = [];
+
+        // Fetch and display books list from the API
         async function loadBooks() {
             const statusEl = document.getElementById('status');
             const booksContainer = document.getElementById('books-container');
@@ -245,42 +278,27 @@
                 }
 
                 const result = await response.json();
-                const books = result.data || [];
+                allBooks = result.data || [];
 
                 // Hide loading message
                 statusEl.style.display = 'none';
 
                 // Check if there are any books
-                if (books.length === 0) {
+                if (allBooks.length === 0) {
                     booksContainer.innerHTML = '<div class="no-books">No books available in the catalogue.</div>';
                     booksContainer.style.display = 'block';
                     return;
                 }
 
-                // Display books
-                booksContainer.innerHTML = books.map(book => `
-                    <div class="book-card">
-                        <div class="book-title">${escapeHtml(book.title)}</div>
-                        <div class="book-author">by ${escapeHtml(book.author)}</div>
-                        ${book.genre ? `<div class="book-genre">${escapeHtml(book.genre)}</div>` : ''}
-                        <div class="book-details">
-                            <div class="book-detail-item">
-                                <span class="detail-label">Published Year</span>
-                                <span class="detail-value">${book.publishedYear}</span>
-                            </div>
-                            ${(book.id || book._id) ? `
-                            <div class="book-detail-item">
-                                <span class="detail-label">Book Code</span>
-                                <span class="detail-value">${book.id || book._id}</span>
-                            </div>
-                            ` : ''}
-                        </div>
-                        ${book.summary ? `<div class="book-summary">${escapeHtml(book.summary)}</div>` : ''}
-                        <div class="price">${book.price} ${book.currency || 'AUD'}</div>
+                // Display books as a simple list with title and price
+                booksContainer.innerHTML = allBooks.map((book, index) => `
+                    <div class="book-list-item" onclick="showBookDetails(${index})">
+                        <span class="book-list-title">${escapeHtml(book.title)}</span>
+                        <span class="book-list-price">${book.price} ${book.currency || 'AUD'}</span>
                     </div>
                 `).join('');
 
-                booksContainer.style.display = 'grid';
+                booksContainer.style.display = 'block';
 
             } catch (error) {
                 console.error('Error loading books:', error);
@@ -290,6 +308,39 @@
             } finally {
                 btn.disabled = false;
             }
+        }
+
+        // Show detailed view for a single book
+        function showBookDetails(index) {
+            const booksContainer = document.getElementById('books-container');
+            const book = allBooks[index];
+
+            if (!book) return;
+
+            // Display full details for the selected book
+            booksContainer.innerHTML = `
+                <div class="book-card">
+                    <div class="book-title">${escapeHtml(book.title)}</div>
+                    <div class="book-author">by ${escapeHtml(book.author)}</div>
+                    ${book.genre ? `<div class="book-genre">${escapeHtml(book.genre)}</div>` : ''}
+                    <div class="book-details">
+                        <div class="book-detail-item">
+                            <span class="detail-label">Published Year</span>
+                            <span class="detail-value">${book.publishedYear}</span>
+                        </div>
+                        ${(book.id || book._id) ? `
+                        <div class="book-detail-item">
+                            <span class="detail-label">Book Code</span>
+                            <span class="detail-value">${book.id || book._id}</span>
+                        </div>
+                        ` : ''}
+                    </div>
+                    ${book.summary ? `<div class="book-summary">${escapeHtml(book.summary)}</div>` : ''}
+                    <div class="price">${book.price} ${book.currency || 'AUD'}</div>
+                </div>
+            `;
+
+            booksContainer.style.display = 'grid';
         }
 
         // Escape HTML to prevent XSS attacks
