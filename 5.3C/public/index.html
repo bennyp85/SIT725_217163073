@@ -298,7 +298,8 @@
                     </div>
                 `).join('');
 
-                // Add event delegation for list item clicks
+                // Remove previous event listener and add new one for list item clicks
+                booksContainer.removeEventListener('click', handleBookClick);
                 booksContainer.addEventListener('click', handleBookClick);
 
                 booksContainer.style.display = 'block';
